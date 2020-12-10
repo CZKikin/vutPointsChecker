@@ -5,6 +5,17 @@ import urllib.request
 import getpass
 import re
 
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKCYAN = '\033[96m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
 user = input("Username: ")
 passwd = getpass.getpass()
 
@@ -24,7 +35,7 @@ opener = urllib.request.build_opener(handler)
 try:
     opener.open("https://wis.fit.vutbr.cz/FIT/st/get-coursesx.php?json=1&sem=Z")
 except:
-    print("Bad username || passord")
+    print(f"{bcolors.FAIL}Bad username || passord{bcolors.ENDC}")
     exit(1);
 
 # Install the opener.
@@ -43,7 +54,8 @@ for i in data:
         if f["type"] == "credit":
             print(f'    [i]Points: {i["points"]}')
             print(f'    [i]Min points needed to pass: {f["min"]}')
-
+            if i["points"] > f["min"]:
+                print(f"    {bcolors.OKGREEN}[✝]Probably passed :){bcolors.ENDC}")
         if re.match(r".*projekt.*", f["title"], re.IGNORECASE):
             if not re.match(r".*předchoz.*", f["title"], re.IGNORECASE):
-                print(f"    [!]Potencional requirement: {f['title']}")
+                print(f"    {bcolors.WARNING}[!]Potencional requirement: {f['title']}{bcolors.ENDC}")
