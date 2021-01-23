@@ -52,10 +52,15 @@ for i in data:
     print(f'{i["abbrv"]}:')
     for f in i["items"]:
         if f["type"] == "credit":
+            if i["points"] > 50: 
+                print(f"    {bcolors.OKGREEN}[✔]Congratulations, you've done it!{bcolors.ENDC}")
+                break;
+
             print(f'    [i]Points: {i["points"]}')
             print(f'    [i]Min points needed to pass: {f["min"]}')
             if i["points"] > f["min"]:
                 print(f"    {bcolors.OKGREEN}[✝]Probably passed :){bcolors.ENDC}")
+
         if re.match(r".*projekt.*", f["title"], re.IGNORECASE):
             if not re.match(r".*předchoz.*", f["title"], re.IGNORECASE):
                 print(f"    {bcolors.WARNING}[!]Potencional requirement: {f['title']}{bcolors.ENDC}")
