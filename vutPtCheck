@@ -49,17 +49,26 @@ data = json.loads(data)
 data = data["data"]
 
 for i in data:
-    print(f'{i["abbrv"]}:')
+    print(f'{bcolors.HEADER}{i["abbrv"]}{bcolors.ENDC}:')
+    try:
+        grade = i["grade"].strip()
+    except:
+        grade = "Unknown"
+    print(f'    Grade: {grade}') 
+
+    if grade != "4F" and grade != "Unknown":
+        print(f'    {bcolors.OKGREEN}[✔]You did it. Enjoy your well desired rest.{bcolors.ENDC}')
+        continue;
+
     for f in i["items"]:
         if f["type"] == "credit":
-            if i["points"] > 50: 
-                print(f"    {bcolors.OKGREEN}[✔]Congratulations, you've done it!{bcolors.ENDC}")
-                break;
-
             print(f'    [i]Points: {i["points"]}')
-            print(f'    [i]Min points needed to pass: {f["min"]}')
-            if i["points"] > f["min"]:
-                print(f"    {bcolors.OKGREEN}[✝]Probably passed :){bcolors.ENDC}")
+            try:
+                print(f'    [i]Min points for credit: {f["min"]}')
+                if i["points"] > f["min"]:
+                    print(f"    {bcolors.OKGREEN}[½]Enough points for credit{bcolors.ENDC}")
+            except:
+                pass
 
         if re.match(r".*projekt.*", f["title"], re.IGNORECASE):
             if not re.match(r".*předchoz.*", f["title"], re.IGNORECASE):
