@@ -75,26 +75,41 @@ def printData(data):
             print(f'    {bcolors.GREEN}[✔]You did it. Enjoy your well desired rest.{bcolors.ENDC}')
             continue;
 
-        print(f'    Grade: {bcolors.RED}{grade}{bcolors.ENDC}') 
-        for f in i["items"]:
-            if f["type"] == "credit":
-                print(f'    [i]Points: {i["points"]}')
-                try:
-                    print(f'    [i]Min points for credit: {f["min"]}')
-                    if i["points"] > f["min"]:
-                        print(f"    {bcolors.GREEN}[½]Enough points for credit{bcolors.ENDC}")
-                except:
-                    pass
+        try: 
+            color = bcolors.GREEN if i["credit_status"] == "yes" else bcolors.RED
+            print(f'    {color}[💵]Credit: {i["credit_status"]}{bcolors.ENDC}')
+        except:
+            pass
 
+        print(f'    Grade: {bcolors.RED}{grade}{bcolors.ENDC}') 
+
+        for f in i["items"]:
             if re.match(r".*projekt.*", f["title"], re.IGNORECASE):
                 if not re.match(r".*předchoz.*", f["title"], re.IGNORECASE):
                     print(f"    {bcolors.YELLOW}[!]Potencional requirement: {f['title']}{bcolors.ENDC}")
+
+def loadUsername():
+    try:
+        with open("user", "r") as file:
+            return file.readline().strip()
+    except:
+        return False
+
+def saveUsername(username):
+    with open("user", "w") as file:
+        file.write(username)
+
 
 def main():
     if len(sys.argv)<2:
         sys.exit("Usage: ./vutPtCheck (w || s - Semester switch")
 
-    user = input("Username: ")
+    if not (user := loadUsername()):
+        user = input("Username: ")
+        switch = input("Do you want to save Username? y/n: ")
+        if switch in ["y", "Y"]:
+            saveUsername(user)
+
     passwd = getpass.getpass()
 
     r = connectToUrl(user, passwd)
