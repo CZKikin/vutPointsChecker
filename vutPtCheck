@@ -42,7 +42,6 @@ def connectToUrl(user, passwd):
     # create "opener" (OpenerDirector instance)
     opener = urllib.request.build_opener(handler)
 
-    #Check what semester is
     baseUrl = "https://wis.fit.vutbr.cz/FIT/st/get-coursesx.php?json=1&"
     semestrUrl = "sem=Z" if sys.argv[1]=="w" else "sem=L"
     baseUrl += semestrUrl
@@ -56,11 +55,9 @@ def connectToUrl(user, passwd):
 
     # Install the opener.
     urllib.request.install_opener(opener)
-
     
     # Now all calls to urllib.request.urlopen use our opener.
     return urllib.request.urlopen(baseUrl)
-
 
 def printData(data):
     for i in data:
@@ -72,15 +69,14 @@ def printData(data):
 
         if grade != "4F" and grade != "Unknown":
             print(f'    Grade: {grade}') 
-            print(f'    {bcolors.GREEN}[✔]You did it. Enjoy your well desired rest.{bcolors.ENDC}')
-            continue;
-
+            continue; 
         try: 
             color = bcolors.GREEN if i["credit_status"] == "yes" else bcolors.RED
-            print(f'    {color}[💵]Credit: {i["credit_status"]}{bcolors.ENDC}')
+            print(f'    {color}[⊕]Credit: {i["credit_status"]}{bcolors.ENDC}')
         except:
             pass
 
+        print(f'    Points: {i["points"]}')
         print(f'    Grade: {bcolors.RED}{grade}{bcolors.ENDC}') 
 
         for f in i["items"]:
@@ -99,10 +95,9 @@ def saveUsername(username):
     with open("user", "w") as file:
         file.write(username)
 
-
-def main():
+if __name__=="__main__":
     if len(sys.argv)<2:
-        sys.exit("Usage: ./vutPtCheck (w || s - Semester switch")
+        sys.exit("Usage: ./vutPtCheck (w || s - Semester switch)")
 
     if not (user := loadUsername()):
         user = input("Username: ")
@@ -120,6 +115,3 @@ def main():
     data = data["data"]
 
     printData(data)
-
-if __name__=="__main__":
-    main()
