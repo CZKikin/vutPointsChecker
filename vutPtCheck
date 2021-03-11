@@ -86,13 +86,13 @@ def printData(data):
 
 def loadUsername():
     try:
-        with open("user", "r") as file:
+        with open(f"/home/{getpass.getuser()}/.config/vutPtCheckUser", "r") as file:
             return file.readline().strip()
     except:
         return False
 
 def saveUsername(username):
-    with open("user", "w") as file:
+    with open(f"/home/{getpass.getuser()}/.config/vutPtCheckUser", "w") as file:
         file.write(username)
 
 if __name__=="__main__":
